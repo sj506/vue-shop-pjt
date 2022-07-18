@@ -9,9 +9,18 @@ export default {
           url,
           data,
         }).catch((e) => {
-          console.log(e);
+          console.error(e);
         })
       ).data;
+    },
+    $base64(file) {
+      return new Promise((resolve) => {
+        const fr = new FileReader();
+        fr.onload = (e) => {
+          resolve(e.target.result);
+        };
+        fr.readAsDataURL(file);
+      });
     },
   },
 };
