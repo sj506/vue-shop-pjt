@@ -3,9 +3,9 @@
     <h1>SalesList</h1>
     <div class="container">
       <div class="float-end mb-1">
-        <router-link class="btn btn-dark" to="/create"> 제품등록 </router-link>
+        <router-link class="nav-link" to="/create"> <button class="btn btn-dark" type="button">제품등록</button> </router-link>
       </div>
-      <table class="table table-bordered">
+      <table class="table table-bordered" v-for="(product, idx) in productList" :key="product.id">
         <thead>
           <tr>
             <th></th>
@@ -19,20 +19,29 @@
         <tbody>
           <tr>
             <td>
-              <img src="`/download/${product.id}/${product.path}`" style="height: 50px; width: auto" />
+              <img
+                src="`/download/${product.id}/${product.path}`"
+                style="height: 50px; width: auto"
+                onerror="this.onerror=null, this.src='https://images.velog.io/images/manyyeon/post/55712cff-8d90-4066-b813-89eaf5f871f2/pngwing.com%20(1).png'"
+              />
             </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <button type="button" class="btn btn-info me-1">사진등록</button>
-              <button type="button" class="btn btn-warning me-1">수정</button>
-              <button type="button" class="btn btn-danger">삭제</button>
+            <td>{{ product.product_name }}</td>
+            <td>{{ product.product_price }}</td>
+            <td>{{ product.delivery_price }}</td>
+            <td>{{ product.add_delivery_price }}</td>
+            <td class="contanier-center">
+              <!-- <router-link class="nav-link" :to="{ path: '/image_insert', query: { product_id: product.id, product_name: product.product_name } }"> -->
+              <button type="button" class="btn btn-info me-1" @click="goToImageInsert(idx)">사진등록</button>
+              <!-- </router-link> -->
+              <button type="button" class="btn btn-warning me-1" @click="ProductIns(product.id)">수정</button>
+              <button type="button" class="btn btn-danger me-1" @click="ProductDel(product.id)">삭제</button>
             </td>
           </tr>
         </tbody>
       </table>
+      <div v-if="dNone" class="spinner-grow" role="status">
+        <span class="sr-only"></span>
+      </div>
     </div>
   </main>
 </template>
@@ -42,13 +51,51 @@ export default {
   components: {},
   data() {
     return {
-      sampleData: '',
+      productList: {},
+      dNone: true,
     };
   },
   setup() {},
-  created() {},
+  created() {
+    this.getProductList();
+  },
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    async getProductList() {
+      const productList = await this.$get('/api/productList2', {});
+      console.log(productList);
+      this.productList = productList;
+      this.dNone = false;
+    },
+    async ProductDel(id) {
+      this.dNone = true;
+      const res = this.$post('/api/ProductDel', id);
+      console.log(res);
+      this.getProductList();
+    },
+    goToImageInsert(idx) {
+      this.$store.commit('sallerSelectedProduct', this.productList[idx]);
+      this.$router.push({ path: '/image_insert' });
+    },
+
+    ProductIns(id) {
+      this.productList.forEach((item) => {
+        if (item.id === id) {
+          this.dNone = false;
+          console.log(item.product_name);
+        }
+      });
+    },
+  },
 };
 </script>
+
+<style scoped>
+td {
+  min-width: 120px;
+}
+.btn {
+  width: 100px;
+}
+</style>

@@ -37,4 +37,18 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.contanier-center {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.dNone {
+  display: none;
+}
+
+.dBlock {
+  display: block;
+}
 </style>
