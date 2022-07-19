@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import KakaoLogin from '../views/KakaoLogin.vue';
 import ProductCreate from '../views/ProductCreate.vue';
 import SalesList from '../views/SalesList.vue';
 import ImageInsert from '../views/ImageInsert.vue';
@@ -7,11 +6,6 @@ import ProductList from '../views/ProductList.vue';
 import ProductDetails from '../views/ProductDetails.vue';
 
 const routes = [
-  {
-    path: '/kakaologin',
-    name: 'kakaologin',
-    component: KakaoLogin,
-  },
   {
     path: '/',
     name: 'Home',

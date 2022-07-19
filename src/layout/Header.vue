@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a href="#" class="navbar-brand"> soldout </a>
+      <a class="navbar-brand" href="#">Soldout</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -9,10 +9,10 @@
         data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
-        aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
@@ -28,20 +28,21 @@
             <router-link class="nav-link" to="/sales">제품등록</router-link>
           </li>
           <li v-if="user.email === undefined">
-            <button class="btn btn-primary" type="button" @click="kakaoLogin">로그인</button>
+            <button class="btn btn-danger" type="button" @click="kakaoLogin">로그인</button>
           </li>
           <li v-else>
             <button class="btn btn-danger" type="button" @click="kakaoLogout">로그아웃</button>
           </li>
         </ul>
-        <form action="" class="d-flex">
-          <input type="search" placeholder="Search" aria-label="Search" class="form-control me-2" />
-          <button class="btn btn-outline-success" type="submit">Search</button>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <button class="btn btn-outline-success text-white" type="submit" style="border-color: white">Search</button>
         </form>
       </div>
     </div>
   </nav>
 </template>
+
 <script>
 export default {
   name: 'header',
@@ -83,7 +84,7 @@ export default {
       });
     },
     async login(params) {
-      const data = await this.$api('/user/signup', params);
+      const data = await this.$post('/user/signup', params);
       params.iuser = data.result;
       this.$store.commit('setUser', params);
     },
@@ -91,12 +92,12 @@ export default {
       window.Kakao.Auth.logout(async (res) => {
         console.log(res);
         this.$store.commit('setUser', {});
-        this.$router.push({ path: '/' }); //option
-        await this.$api('/user/logout');
+        this.$router.push({ path: '/' }); //라우터 주소 이동. (option 사항)
+        await this.$post('/user/logout');
       });
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style></style>
