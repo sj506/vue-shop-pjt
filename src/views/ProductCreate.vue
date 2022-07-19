@@ -91,6 +91,8 @@
   </main>
 </template>
 <script>
+import { LOGICAL_OPERATORS } from '@babel/types';
+
 export default {
   data() {
     return {
@@ -140,7 +142,9 @@ export default {
           id: item.id,
           value: item.cate3,
         };
+        console.log(this.categoryObj[cate1][cate2]);
         this.categoryObj[cate1][cate2].push(obj);
+        console.log(this.categoryObj[cate1][cate2]);
       });
     },
     changeCate1() {
