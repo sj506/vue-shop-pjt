@@ -5,15 +5,19 @@ export default createStore({
   state() {
     return {
       user: {},
-      sallerSelectedProduct: {},
+      getProductList: {},
+      idx: 0,
     };
   },
   mutations: {
     user: (state, data) => {
       state.user = data;
     },
-    sallerSelectedProduct: (state, data) => {
-      state.sallerSelectedProduct = data;
+    getProductList: (state, data) => {
+      state.getProductList = data;
+    },
+    getIdx: (state, data) => {
+      state.getIdx = data;
     },
   },
   plugins: [

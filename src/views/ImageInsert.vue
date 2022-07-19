@@ -5,12 +5,12 @@
 
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">제품ID</label>
-        <div class="col-md-9">{{ productDetail[idx].id }}</div>
+        <div class="col-md-9">{{ ProductList[idx].id }}</div>
       </div>
 
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">제품명</label>
-        <div class="col-md-9">{{ productDetail[idx].product_name }}</div>
+        <div class="col-md-9">{{ ProductList[idx].product_name }}</div>
       </div>
 
       <div class="mb-3 row">
@@ -73,15 +73,15 @@ export default {
     return {
       productId: 0,
       productName: '',
-      productDetail: {},
+      ProductList: {},
       productImage: [],
       idx: 0,
     };
   },
   created() {
-    this.productDetail = this.$store.state.sallerSelectedProduct;
-    console.log(this.productDetail);
-    // this.idx = $router.params.idx;
+    this.ProductList = this.$store.state.getProductList;
+    this.idx = this.$store.state.getIdx;
+    console.log(this.ProductList);
   },
   methods: {},
 };

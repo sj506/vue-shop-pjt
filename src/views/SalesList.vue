@@ -63,20 +63,17 @@ export default {
   unmounted() {},
   methods: {
     async getProductList() {
-      const productList = await this.$get('/api/productList2', {});
-      console.log(productList);
-      this.productList = productList;
+      this.productList = this.$store.state.getProductList;
       this.dNone = false;
     },
     async ProductDel(id) {
       this.dNone = true;
       const res = this.$post('/api/ProductDel', id);
       console.log(res);
-      this.getProductList();
     },
     goToImageInsert(idx) {
-      this.$store.commit('sallerSelectedProduct', this.productList);
-      this.$router.push({ path: `/image_insert/${idx}` });
+      this.$store.commit('getIdx', idx);
+      this.$router.push({ path: '/image_insert' });
     },
 
     ProductIns(id) {

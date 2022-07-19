@@ -91,8 +91,6 @@
   </main>
 </template>
 <script>
-import { LOGICAL_OPERATORS } from '@babel/types';
-
 export default {
   data() {
     return {
@@ -192,6 +190,8 @@ export default {
             const res = this.$post('/api/productInsert', this.product);
             console.log(res);
             this.$swal.fire('저장되었습니다', '', 'success');
+            const productList = await this.$get('/api/productList2', {});
+            this.$store.commit('getProductList', productList);
             this.$router.push({ path: '/sales' });
           }
         });
