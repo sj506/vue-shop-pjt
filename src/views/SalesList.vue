@@ -75,8 +75,8 @@ export default {
       this.getProductList();
     },
     goToImageInsert(idx) {
-      this.$store.commit('sallerSelectedProduct', this.productList[idx]);
-      this.$router.push({ path: '/image_insert' });
+      this.$store.commit('sallerSelectedProduct', this.productList);
+      this.$router.push({ path: `/image_insert/${idx}` });
     },
 
     ProductIns(id) {
