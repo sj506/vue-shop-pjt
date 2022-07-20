@@ -82,8 +82,13 @@ export default {
     this.ProductList = this.$store.state.getProductList;
     this.idx = this.$store.state.getIdx;
     console.log(this.ProductList);
+    console.log(this.idx);
   },
-  methods: {},
+  methods: {
+    async uploadFile(files, type) {
+      console.log(files);
+    },
+  },
 };
 </script>
 

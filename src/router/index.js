@@ -38,7 +38,7 @@ const routes = [
     component: SalesList,
   },
   {
-    path: '/image_insert/:idx',
+    path: '/image_insert',
     name: 'ImageInsert',
     component: ImageInsert,
     beforeEnter: requireAuth(),

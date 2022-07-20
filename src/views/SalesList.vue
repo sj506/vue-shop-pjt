@@ -57,12 +57,17 @@ export default {
   },
   setup() {},
   created() {
-    this.getProductList();
+    Object.keys(this.$store.state.getProductList).length === 0 ? this.firstGet() : this.getProductList();
   },
   mounted() {},
   unmounted() {},
   methods: {
-    async getProductList() {
+    async firstGet() {
+      const productList = await this.$get('/api/productList2', {});
+      this.$store.commit('getProductList', productList);
+      this.getProductList();
+    },
+    getProductList() {
       this.productList = this.$store.state.getProductList;
       this.dNone = false;
     },
@@ -70,6 +75,9 @@ export default {
       this.dNone = true;
       const res = this.$post('/api/ProductDel', id);
       console.log(res);
+      const productList = await this.$get('/api/productList2', {});
+      this.$store.commit('getProductList', productList);
+      this.getProductList();
     },
     goToImageInsert(idx) {
       this.$store.commit('getIdx', idx);
