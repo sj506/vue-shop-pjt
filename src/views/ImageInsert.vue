@@ -106,6 +106,8 @@ export default {
   created() {
     this.ProductList = this.$store.state.getProductList;
     this.idx = this.$store.state.getIdx;
+    console.log(this.idx);
+    console.log(this.ProductList);
   },
   methods: {
     async getProductImage() {
@@ -154,11 +156,10 @@ export default {
         }
         const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
         console.log(error);
+        console.log(this.ProductList);
+        const productList = await this.$get('/api/productList2', {});
+        this.$store.commit('getProductList', productList);
       }
-    },
-
-    async productImageList() {
-      const productImageList = await this.$get(`/api/productImageList/${this.ProductList[this.idx].id}`, {});
     },
   },
 };

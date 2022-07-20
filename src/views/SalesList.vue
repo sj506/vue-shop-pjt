@@ -20,9 +20,12 @@
           <tr>
             <td>
               <img
-                src="`/download/${product.id}/${product.path}`"
+                :src="
+                  product.path
+                    ? product.path
+                    : 'https://images.velog.io/images/manyyeon/post/55712cff-8d90-4066-b813-89eaf5f871f2/pngwing.com%20(1).png'
+                "
                 style="height: 50px; width: auto"
-                onerror="this.onerror=null, this.src='https://images.velog.io/images/manyyeon/post/55712cff-8d90-4066-b813-89eaf5f871f2/pngwing.com%20(1).png'"
               />
             </td>
             <td>{{ product.product_name }}</td>
@@ -59,14 +62,20 @@ export default {
   },
   setup() {},
   created() {
-    Object.keys(this.$store.state.getProductList).length === 0 ? this.firstGet() : this.getProductList();
+    // if (this.getProductList() !== this.$store.state.getProductList) {
+    //   this.productList = this.$store.state.getProductList;
+    //   this.dNone = false;
+    // }
+    this.$store.state.getProductList !== this.productList ? this.firstGet() : this.getProductList();
   },
   mounted() {},
   unmounted() {},
+  updated() {},
   methods: {
     async firstGet() {
       const productList = await this.$get('/api/productList2', {});
       this.$store.commit('getProductList', productList);
+      console.log(productList);
       this.getProductList();
     },
     getProductList() {
