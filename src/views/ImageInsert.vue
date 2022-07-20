@@ -146,19 +146,23 @@ export default {
     },
 
     async upload() {
+      console.log(this.imgData);
       // type = 1,2,3
       for (let i = 0; i < this.imgData.length; i++) {
-        if (i === 1) {
+        if (!this.imgData[i]) {
+          return;
+        } else if (i === 1) {
           for (let z = 0; z < Object.keys(this.imgData[1]).length; z++) {
             const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/2`, this.imgData[1][z]);
             console.log(error);
           }
+        } else {
+          const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
+          console.log(error);
+          console.log(this.ProductList);
+          const productList = await this.$get('/api/productList2', {});
+          this.$store.commit('getProductList', productList);
         }
-        const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
-        console.log(error);
-        console.log(this.ProductList);
-        const productList = await this.$get('/api/productList2', {});
-        this.$store.commit('getProductList', productList);
       }
     },
   },
