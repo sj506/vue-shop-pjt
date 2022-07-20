@@ -16,7 +16,14 @@
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">섬네일 이미지</label>
         <div class="col-md-9">
-          <div class="row">TODO: 썸네일 이미지 리스트 가져오는 로직 후 구현</div>
+          <div class="row">
+            <div v-if="preview1 !== ''" class="col-lg-3 col-md-4 col-sm-2">
+              <div class="position-relative">
+                <img :src="preview1" alt="" class="img-fluid" />
+                <div class="position-absolute top-0 end-0" style="cursor: pointer" @click="preview1 = ''">X</div>
+              </div>
+            </div>
+          </div>
           <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 1)" />
           <div class="alert alert-secondary" role="alert">
             <ul>
@@ -31,8 +38,14 @@
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">제품 이미지</label>
         <div class="col-md-9">
-          <div class="row">TODO: 제품 이미지 리스트 가져오는 로직 후 구현</div>
-          <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 2)" />
+          <div class="row">
+            <div v-if="preview2 !== ''" class="col-lg-3 col-md-4 col-sm-2">
+              <div class="position-relative">
+                <img :src="preview2" alt="" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+          <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 2)" multiple />
           <div class="alert alert-secondary" role="alert">
             <ul>
               <li>최대 5개 가능</li>
@@ -47,7 +60,13 @@
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">제품설명 이미지</label>
         <div class="col-md-9">
-          <div class="row">TODO: 제품설명 이미지 리스트 가져오는 로직 후 구현</div>
+          <div class="row">
+            <div v-if="preview3 !== ''" class="col-lg-3 col-md-4 col-sm-2">
+              <div class="position-relative">
+                <img :src="preview3" alt="" class="img-fluid" />
+              </div>
+            </div>
+          </div>
           <input type="file" class="form-control" accept="image/png,image/jpeg" @change="uploadFile($event.target.files, 3)" />
           <div class="alert alert-secondary" role="alert">
             <ul>
@@ -60,7 +79,7 @@
 
       <div class="mb-3 row m-auto">
         <router-link class="nav-link" to="/sales">
-          <button type="button" class="btn btn-lg btn-dark">확인</button>
+          <button type="button" class="btn btn-lg btn-dark" @click="upload">확인</button>
         </router-link>
       </div>
     </div>
@@ -76,17 +95,70 @@ export default {
       ProductList: {},
       productImage: [],
       idx: 0,
+      imgData: ['', '', ''],
+      imgList: {},
+      filesPreview: [],
+      preview1: '',
+      preview2: [],
+      preview3: '',
     };
   },
   created() {
     this.ProductList = this.$store.state.getProductList;
     this.idx = this.$store.state.getIdx;
-    console.log(this.ProductList);
-    console.log(this.idx);
   },
   methods: {
+    async getProductImage() {
+      this.productImage = await this.$get('/api/imageList', { productid: this.ProductList[this.idx].id });
+    },
+
     async uploadFile(files, type) {
       console.log(files);
+      const image = await this.$base64(files[0]);
+      const reader = new FileReader();
+      if (type === 2) {
+        for (let i = 0; i < files.length; i++) {
+          const image = await this.$base64(files[i]);
+          this.imgList[i] = { image };
+          this.imgData[1] = this.imgList;
+          console.log(reader.readAsDataURL(files[0]));
+          reader.onload = () => {
+            this.preview2 = reader.result;
+          };
+        }
+      } else {
+        this.imgData[type - 1] = { image };
+        console.log(reader.readAsDataURL(files[0]));
+        if (type === 1) {
+          reader.onload = () => {
+            this.preview1 = reader.result;
+          };
+        } else {
+          reader.onload = () => {
+            this.preview3 = reader.result;
+          };
+        }
+
+        console.log(this.imgData);
+      }
+    },
+
+    async upload() {
+      // type = 1,2,3
+      for (let i = 0; i < this.imgData.length; i++) {
+        if (i === 1) {
+          for (let z = 0; z < Object.keys(this.imgData[1]).length; z++) {
+            const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/2`, this.imgData[1][z]);
+            console.log(error);
+          }
+        }
+        const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
+        console.log(error);
+      }
+    },
+
+    async productImageList() {
+      const productImageList = await this.$get(`/api/productImageList/${this.ProductList[this.idx].id}`, {});
     },
   },
 };

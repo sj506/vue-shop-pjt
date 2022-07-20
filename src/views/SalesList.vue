@@ -39,9 +39,11 @@
           </tr>
         </tbody>
       </table>
+      <!-- 로딩div -->
       <div v-if="dNone" class="spinner-grow" role="status">
         <span class="sr-only"></span>
       </div>
+      <!-- 로딩div -->
     </div>
   </main>
 </template>

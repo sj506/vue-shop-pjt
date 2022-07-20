@@ -19,7 +19,7 @@
             <router-link class="nav-link" to="/">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active" to="/">제품리스트</router-link>
+            <router-link class="nav-link" to="/ProductList">제품리스트</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/detail">제품상세페이지</router-link>
@@ -32,6 +32,8 @@
           </li>
           <li v-else>
             <button class="btn btn-danger" type="button" @click="kakaoLogout">로그아웃</button>
+            <span><img :src="user.profile_img" alt="" id="profileImg" /></span>
+            <span class="userNickname">{{ user.nickname }}님 환영합니다!</span>
           </li>
         </ul>
         <form class="d-flex">
@@ -100,4 +102,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#profileImg {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-left: 5px;
+}
+.userNickname {
+  color: white;
+  margin-left: 5px;
+}
+</style>
