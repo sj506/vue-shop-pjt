@@ -66,7 +66,7 @@ export default {
     //   this.productList = this.$store.state.getProductList;
     //   this.dNone = false;
     // }
-    this.firstGet();
+    this.getProductList();
   },
   mounted() {},
   unmounted() {},
