@@ -98,39 +98,41 @@ export default {
       console.log(categoryList);
       categoryList.forEach((categoryList) => {
         this.cate1.push(categoryList.cate1);
+        //cate1이라는 배열에 categoryList.cate1를 다 넣어줌 아직 중복된 값 있음
       });
       const set1 = new Set(this.cate1);
       const uniqueArr1 = [...set1];
-      // 중복값 제거하여 categoryList[0]에 담아둠
+      // 카테고리 중복값 제거하여 categoryList[0]에 담아둠
       this.categoryList[0] = uniqueArr1;
-
-      console.log(this.categoryList);
     },
     getInputValue(e) {
+      // 첫번째 인풋을 선택했을 때 발생되는 change함수
       this.cate2 = [];
-      // 첫번째 input를 변경했을 때 push가 되기 때문에 값이 계속 들어가서 초기화해줌
+      // 첫번째 input 값을 변경했을 때 push가 계속 되기 때문에 초기화해줌
       if (e.target.value == 1) {
         this.categoryList[1] = '';
         this.categoryList[2] = '';
         this.cateVal = 1;
+        // 첫번째 인풋을 전체로 눌렀을 때(값을 선택하지x) 전체상품이 다 보이고 나머지 인풋은 사라지게 함
         return;
       }
-      // 첫번째 인풋을 전체로 했을 때 밑에 인풋들 다 사라져!
       this.cate1 = e.target.value;
-      this.cateVal = e.target.value;
       console.log(this.cate1);
       console.log(this.getCateList);
       this.getCateList.forEach((categoryList) => {
-        if (categoryList.cate1 === this.cateVal) {
+        if (categoryList.cate1 === this.cate1) {
+          // 카테고리리스트에 cate1와 인풋의 value값 = cate1이랑 같으면 cate2에 푸쉬
+          // ex. 전자제품 선택 -> 컴퓨터, 가전제품만 들어감
           this.cate2.push(categoryList.cate2);
         }
       });
       const set2 = new Set(this.cate2);
       const uniqueArr2 = [...set2];
       this.categoryList[1] = uniqueArr2;
-      // 똑같이 중복값 제거하여 categoryList[1]에 넣어줌 cate2 => categoryList[1]에 넣어서 헷갈리지만... 네이밍 바꿔야하나
+      // 똑같이 중복값 제거하여 categoryList[1]에 넣어줌
       console.log(this.categoryList);
       this.cateVal = 2;
+      // cateVal를 2로 바꿔줌으로서 cateVal가 1일 때와 차이를 줌
     },
     getInputValue2(e) {
       this.cate3 = [];

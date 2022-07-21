@@ -77,9 +77,11 @@ export default {
       this.$store.commit('getProductList', productList);
       this.getProductList();
     },
+    //firstGet 쓸지 안 쓸지는 모르지만 일단 만들어 둠 통신해서 전체 가져오는 함수
     getProductList() {
       this.productList = this.$store.state.getProductList;
       this.dNone = false;
+      // 로딩이 끝나면 안보이게
     },
     async ProductDel(id) {
       this.dNone = true;
