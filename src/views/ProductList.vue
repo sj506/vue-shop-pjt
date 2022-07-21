@@ -5,22 +5,25 @@
       <div class="row mb-2">
         <div class="col-12">
           <select class="form-select" @change="getInputValue">
-            <option selected value="0">전체</option>
+            <option selected value="1">전체</option>
             <option v-for="(category, idx) in categoryList[0]" :key="idx" :value="category">{{ category }}</option>
           </select>
           <select v-if="categoryList[1]" class="form-select" @change="getInputValue2">
-            <option selected value="0">전체</option>
+            <option selected value="2">전체</option>
             <option v-for="(category, idx) in categoryList[1]" :key="idx" :value="category">{{ category }}</option>
           </select>
           <select v-if="categoryList[2]" class="form-select" @change="getInputValue3">
-            <option selected value="0">전체</option>
+            <option selected value="3">전체</option>
             <option v-for="(category, idx) in categoryList[2]" :key="idx" :value="category">{{ category }}</option>
           </select>
         </div>
       </div>
       <div class="row">
         <div
-          v-bind:class="{ dBlock: (product.cate3 == cate3 && product.cate2 == cate2 && product.cate1 == cate1) || cateVal == 0 }"
+          v-bind:class="{
+            dBlock: cateVal == 1 || (product.cate1 == cate1 && cateVal == 2) || (product.cate2 == cate2 && cateVal == 3) || product.cate3 == cate3,
+            // 해결!!!!!!!!!!! thank to 예찬, 재훈형
+          }"
           class="dNone col-xl-3 col-lg-4 col-md-6"
           :key="product.id"
           v-for="product in productList"
@@ -68,7 +71,7 @@ export default {
       productList: [],
       getCateList: '',
       categoryList: [],
-      cateVal: 0,
+      cateVal: 1,
       cate1: [],
       cate2: [],
       cate3: [],
@@ -106,9 +109,13 @@ export default {
     getInputValue(e) {
       this.cate2 = [];
       // 첫번째 input를 변경했을 때 push가 되기 때문에 값이 계속 들어가서 초기화해줌
-      this.categoryList[1] = [];
-      this.categoryList[2] = '';
-      // 첫번째 인풋에
+      if (e.target.value == 1) {
+        this.categoryList[1] = '';
+        this.categoryList[2] = '';
+        this.cateVal = 1;
+        return;
+      }
+      // 첫번째 인풋을 전체로 했을 때 밑에 인풋들 다 사라져!
       this.cate1 = e.target.value;
       this.cateVal = e.target.value;
       console.log(this.cate1);
@@ -123,11 +130,16 @@ export default {
       this.categoryList[1] = uniqueArr2;
       // 똑같이 중복값 제거하여 categoryList[1]에 넣어줌 cate2 => categoryList[1]에 넣어서 헷갈리지만... 네이밍 바꿔야하나
       console.log(this.categoryList);
+      this.cateVal = 2;
     },
     getInputValue2(e) {
       this.cate3 = [];
       this.cate2 = e.target.value;
       this.cateVal = e.target.value;
+      if (e.target.value == 2) {
+        this.categoryList[2] = '';
+        return;
+      }
       console.log(this.cate2);
       console.log(this.getCateList);
       this.getCateList.forEach((categoryList) => {
@@ -139,6 +151,7 @@ export default {
       const uniqueArr3 = [...set3];
       this.categoryList[2] = uniqueArr3;
       console.log(this.categoryList);
+      this.cateVal = 3;
     },
     getInputValue3(e) {
       this.cate3 = e.target.value;
