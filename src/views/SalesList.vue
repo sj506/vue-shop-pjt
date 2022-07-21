@@ -66,7 +66,7 @@ export default {
     //   this.productList = this.$store.state.getProductList;
     //   this.dNone = false;
     // }
-    this.$store.state.getProductList !== this.productList ? this.firstGet() : this.getProductList();
+    this.firstGet();
   },
   mounted() {},
   unmounted() {},
@@ -75,7 +75,6 @@ export default {
     async firstGet() {
       const productList = await this.$get('/api/productList2', {});
       this.$store.commit('getProductList', productList);
-      console.log(productList);
       this.getProductList();
     },
     getProductList() {

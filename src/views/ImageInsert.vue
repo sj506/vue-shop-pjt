@@ -90,17 +90,16 @@
 export default {
   data() {
     return {
-      productId: 0,
-      productName: '',
       ProductList: {},
-      productImage: [],
       idx: 0,
       imgData: ['', '', ''],
-      imgList: {},
-      filesPreview: [],
+      //이미지 담는 배열
+      imgList: [],
+      //type 2번 이미지들 담는 객체
       preview1: '',
-      preview2: [],
+      preview2: '',
       preview3: '',
+      type: [1, 2, 3],
     };
   },
   created() {
@@ -110,60 +109,57 @@ export default {
     console.log(this.ProductList);
   },
   methods: {
-    async getProductImage() {
-      this.productImage = await this.$get('/api/imageList', { productid: this.ProductList[this.idx].id });
-    },
-
     async uploadFile(files, type) {
       console.log(files);
       const image = await this.$base64(files[0]);
       const reader = new FileReader();
-      if (type === 2) {
-        for (let i = 0; i < files.length; i++) {
-          const image = await this.$base64(files[i]);
-          this.imgList[i] = { image };
-          this.imgData[1] = this.imgList;
+
+      switch (type) {
+        case 1:
+          console.log(1);
+          this.imgList[0] = { image };
+          this.imgData[type - 1] = this.imgList;
           console.log(reader.readAsDataURL(files[0]));
-          reader.onload = () => {
-            this.preview2 = reader.result;
-          };
-        }
-      } else {
-        this.imgData[type - 1] = { image };
-        console.log(reader.readAsDataURL(files[0]));
-        if (type === 1) {
           reader.onload = () => {
             this.preview1 = reader.result;
           };
-        } else {
+          this.imgList = [];
+          break;
+
+        case 2:
+          for (let i = 0; i < files.length; i++) {
+            const image = await this.$base64(files[i]);
+            this.imgList[i] = { image };
+            this.imgData[1] = this.imgList;
+            console.log(reader.readAsDataURL(files[i]));
+            reader.onload = () => {
+              this.preview2 = reader.result;
+            };
+          }
+          this.imgList = [];
+          break;
+        case 3:
+          this.imgList[0] = { image };
+          this.imgData[type - 1] = this.imgList;
+          console.log(reader.readAsDataURL(files[0]));
           reader.onload = () => {
             this.preview3 = reader.result;
           };
-        }
-
-        console.log(this.imgData);
+          this.imgList = [];
+          break;
       }
+      console.log(this.imgData);
     },
 
     async upload() {
-      console.log(this.imgData);
-      // type = 1,2,3
-      for (let i = 0; i < this.imgData.length; i++) {
-        if (!this.imgData[i]) {
-          return;
-        } else if (i === 1) {
-          for (let z = 0; z < Object.keys(this.imgData[1]).length; z++) {
-            const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/2`, this.imgData[1][z]);
-            console.log(error);
-          }
-        } else {
-          const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
-          console.log(error);
-          console.log(this.ProductList);
-          const productList = await this.$get('/api/productList2', {});
-          this.$store.commit('getProductList', productList);
-        }
+      await this.$get(`/api/ProductImgDel/${this.ProductList[this.idx].id}/3`, {});
+      for (let i = 0; i < this.type.length; i++) {
+        const { error } = await this.$post(`/api/upload/${this.ProductList[this.idx].id}/${i + 1}`, this.imgData[i]);
+        console.log(error);
       }
+      const productList = await this.$get('/api/productList2', {});
+      this.$store.commit('getProductList', productList);
+      console.log(productList);
     },
   },
 };
