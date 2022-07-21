@@ -4,6 +4,7 @@ import SalesList from '../views/SalesList.vue';
 import ImageInsert from '../views/ImageInsert.vue';
 import ProductList from '../views/ProductList.vue';
 import ProductDetails from '../views/ProductDetails.vue';
+import HomeView from '../views/HomeView.vue';
 import store from '@/store';
 import swal from 'sweetalert2';
 
@@ -24,7 +25,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: ProductList,
+    component: HomeView,
   },
   {
     path: '/ProductList',

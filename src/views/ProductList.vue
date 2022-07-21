@@ -4,33 +4,52 @@
     <div class="container">
       <div class="row mb-2">
         <div class="col-12">
-          <select name="" id="" class="form-select">
-            <option selected></option>
-            <option value="1">노트북</option>
-            <option value="2">모니터</option>
-            <option value="3">마우스/키보드</option>
+          <select class="form-select" @change="getInputValue">
+            <option selected value="0">전체</option>
+            <option v-for="(category, idx) in categoryList[0]" :key="idx" :value="category">{{ category }}</option>
+          </select>
+          <select v-if="categoryList[1]" class="form-select" @change="getInputValue2">
+            <option selected value="0">전체</option>
+            <option v-for="(category, idx) in categoryList[1]" :key="idx" :value="category">{{ category }}</option>
+          </select>
+          <select v-if="categoryList[2]" class="form-select" @change="getInputValue3">
+            <option selected value="0">전체</option>
+            <option v-for="(category, idx) in categoryList[2]" :key="idx" :value="category">{{ category }}</option>
           </select>
         </div>
       </div>
       <div class="row">
-        <div class="col-xl-3 col-lg-4 col-md-6">
+        <div
+          v-bind:class="{ dBlock: (product.cate3 == cate3 && product.cate2 == cate2 && product.cate1 == cate1) || cateVal == 0 }"
+          class="dNone col-xl-3 col-lg-4 col-md-6"
+          :key="product.id"
+          v-for="product in productList"
+        >
           <div class="card" style="width: 18rem">
-            <a style="cursor: pointer">
-              <img src="" alt="" class="card-img-top" />
+            <a style="cursor: pointer" @click="goToDetail(product.id)">
+              <img
+                :src="
+                  product.path
+                    ? product.path
+                    : 'https://images.velog.io/images/manyyeon/post/55712cff-8d90-4066-b813-89eaf5f871f2/pngwing.com%20(1).png'
+                "
+                alt="이미지"
+                class="card-img-top"
+              />
             </a>
             <div class="card-body">
-              <h5 class="card-title"></h5>
+              <h5 class="card-title">{{ product.product_name }}</h5>
               <p class="card-text">
-                <span class="badge bg-dark text-white mr-1"></span>
-                <span class="badge bg-dark text-white mr-1"></span>
-                <span class="badge bg-dark text-white"></span>
+                <span class="badge bg-dark text-white mr-1">{{ product.cate1 }}</span>
+                <span class="badge bg-dark text-white mr-1">{{ product.cate2 }}</span>
+                <span class="badge bg-dark text-white">{{ product.cate3 }}</span>
               </p>
               <div class="d-flex justify-content-between aling-items-center">
                 <div class="btn-group" role="group">
                   <button class="btn btn-sm btn-outline-secondary">장바구니 담기</button>
                   <button class="btn btn-sm btn-outline-secondary">주문하기</button>
                 </div>
-                <small class="text-dark">원</small>
+                <small class="text-dark">{{ product.product_price }}원</small>
               </div>
             </div>
           </div>
@@ -46,12 +65,86 @@ export default {
   data() {
     return {
       sampleData: '',
+      productList: [],
+      getCateList: '',
+      categoryList: [],
+      cateVal: 0,
+      cate1: [],
+      cate2: [],
+      cate3: [],
     };
   },
   setup() {},
-  created() {},
+  created() {
+    this.getProductList();
+    this.getCategoryList();
+  },
   mounted() {},
   unmounted() {},
-  methods: {},
+  methods: {
+    async getProductList() {
+      const productList = await this.$get('/api/productList2', {});
+      this.$store.commit('getProductList', productList);
+      this.productList = this.$store.state.getProductList;
+      console.log(this.$store.state.getProductList);
+    },
+    async getCategoryList() {
+      const categoryList = await this.$get('/api/categoryList', {});
+      this.getCateList = categoryList;
+      // catogoryList(중복 많음) 전체를 getCateList에 넣어줌
+      console.log(categoryList);
+      categoryList.forEach((categoryList) => {
+        this.cate1.push(categoryList.cate1);
+      });
+      const set1 = new Set(this.cate1);
+      const uniqueArr1 = [...set1];
+      // 중복값 제거하여 categoryList[0]에 담아둠
+      this.categoryList[0] = uniqueArr1;
+
+      console.log(this.categoryList);
+    },
+    getInputValue(e) {
+      this.cate2 = [];
+      // 첫번째 input를 변경했을 때 push가 되기 때문에 값이 계속 들어가서 초기화해줌
+      this.categoryList[1] = [];
+      this.categoryList[2] = '';
+      // 첫번째 인풋에
+      this.cate1 = e.target.value;
+      this.cateVal = e.target.value;
+      console.log(this.cate1);
+      console.log(this.getCateList);
+      this.getCateList.forEach((categoryList) => {
+        if (categoryList.cate1 === this.cateVal) {
+          this.cate2.push(categoryList.cate2);
+        }
+      });
+      const set2 = new Set(this.cate2);
+      const uniqueArr2 = [...set2];
+      this.categoryList[1] = uniqueArr2;
+      // 똑같이 중복값 제거하여 categoryList[1]에 넣어줌 cate2 => categoryList[1]에 넣어서 헷갈리지만... 네이밍 바꿔야하나
+      console.log(this.categoryList);
+    },
+    getInputValue2(e) {
+      this.cate3 = [];
+      this.cate2 = e.target.value;
+      this.cateVal = e.target.value;
+      console.log(this.cate2);
+      console.log(this.getCateList);
+      this.getCateList.forEach((categoryList) => {
+        if (categoryList.cate2 === this.cateVal) {
+          this.cate3.push(categoryList.cate3);
+        }
+      });
+      const set3 = new Set(this.cate3);
+      const uniqueArr3 = [...set3];
+      this.categoryList[2] = uniqueArr3;
+      console.log(this.categoryList);
+    },
+    getInputValue3(e) {
+      this.cate3 = e.target.value;
+      console.log(this.cate3);
+      this.cateVal = e.target.value;
+    },
+  },
 };
 </script>
