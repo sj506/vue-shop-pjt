@@ -36,7 +36,7 @@
               <!-- <router-link class="nav-link" :to="{ path: '/image_insert', query: { product_id: product.id, product_name: product.product_name } }"> -->
               <button type="button" class="btn btn-info me-1" @click="goToImageInsert(idx)">사진등록</button>
               <!-- </router-link> -->
-              <button type="button" class="btn btn-warning me-1" @click="ProductIns(product.id)">수정</button>
+              <button type="button" class="btn btn-warning me-1" @click="ProductIns(idx)">수정</button>
               <button type="button" class="btn btn-danger me-1" @click="ProductDel(product.id)">삭제</button>
             </td>
           </tr>
@@ -66,7 +66,7 @@ export default {
     //   this.productList = this.$store.state.getProductList;
     //   this.dNone = false;
     // }
-    this.getProductList();
+    this.firstGet();
   },
   mounted() {},
   unmounted() {},
@@ -96,13 +96,9 @@ export default {
       this.$router.push({ path: '/image_insert' });
     },
 
-    ProductIns(id) {
-      this.productList.forEach((item) => {
-        if (item.id === id) {
-          this.dNone = false;
-          console.log(item.product_name);
-        }
-      });
+    ProductIns(idx) {
+      this.$store.commit('getIdx', idx);
+      this.$router.push({ path: `/ProductUpdate` });
     },
   },
 };

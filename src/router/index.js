@@ -4,6 +4,7 @@ import SalesList from '../views/SalesList.vue';
 import ImageInsert from '../views/ImageInsert.vue';
 import ProductList from '../views/ProductList.vue';
 import ProductDetails from '../views/ProductDetails.vue';
+import ProductUpdate from '../views/ProductUpdate.vue';
 import HomeView from '../views/HomeView.vue';
 import store from '@/store';
 import swal from 'sweetalert2';
@@ -53,6 +54,11 @@ const routes = [
     path: '/detail',
     name: 'ProductDetails',
     component: ProductDetails,
+  },
+  {
+    path: '/ProductUpdate',
+    name: 'ProductUpdate',
+    component: ProductUpdate,
   },
 ];
 
