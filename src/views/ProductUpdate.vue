@@ -54,7 +54,7 @@
               </select>
             </div>
             <div class="col-auto">
-              <select class="form-select" v-model="ProductList[idx].cate3">
+              <select class="form-select" @change="getInputValue3" v-model="ProductList[idx].cate3">
                 <option selected value="3">전체</option>
                 <option v-for="(category, idx) in categoryList[2]" :key="idx" :value="category">{{ category }}</option>
               </select>
@@ -133,7 +133,33 @@ export default {
         })
         .then(async (result) => {
           if (result.isConfirmed) {
-            const res = this.$post('/api/productUpdate', this.productDetail);
+            switch (this.cate1) {
+              case this.cate1 == '전자제품' && this.cate2 == '컴퓨터' && this.cate3 == '악세사리':
+                this.ProductList[this.idx].category_id = 1;
+                break;
+
+              case this.cate1 == '전자제품' && this.cate2 == '컴퓨터' && this.cate3 == '노트북':
+                this.ProductList[this.idx].category_id = 2;
+                break;
+
+              case this.cate1 == '전자제품' && this.cate2 == '컴퓨터' && this.cate3 == '조립식':
+                this.ProductList[this.idx].category_id = 3;
+                break;
+
+              case this.cate1 == '전자제품' && this.cate2 == '가전제품' && this.cate3 == '텔레비전':
+                this.ProductList[this.idx].category_id = 4;
+                break;
+
+              case this.cate1 == '전자제품' && this.cate2 == '가전제품' && this.cate3 == '냉장고':
+                this.ProductList[this.idx].category_id = 5;
+                break;
+
+              case this.cate1 == '생필품' && this.cate2 == '주방용품' && this.cate3 == '조리도구':
+                this.ProductList[this.idx].category_id = 6;
+                break;
+            }
+            console.log(this.ProductList[this.idx].category_id);
+            const res = this.$post('/api/productUpdate', this.ProductList[this.idx]);
             console.log(res);
             this.$swal.fire('수정되었습니다.', '', 'success');
             this.$router.push({ path: '/sales' });
@@ -184,6 +210,10 @@ export default {
       const set3 = new Set(this.cate3);
       const uniqueArr3 = [...set3];
       this.categoryList[2] = uniqueArr3;
+    },
+
+    getInputValue3(e) {
+      this.cate3 = e.target.value;
     },
   },
 };
