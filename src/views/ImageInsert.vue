@@ -1,7 +1,7 @@
 <template>
   <main class="mt-3">
     <div class="container">
-      <h2 class="text-center">제품 사진 등록1</h2>
+      <h2 class="text-center">제품 사진 등록</h2>
 
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label">제품ID</label>
